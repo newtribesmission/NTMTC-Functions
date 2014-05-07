@@ -31,7 +31,7 @@ INCLUDES:
 		Displays current year (ie 2013)
 		Primary use: Copyright footer
 	- Adds custom Image Sizes
-	- Adds 
+	- Adds ability to search only FAQ
 	
  */
 
