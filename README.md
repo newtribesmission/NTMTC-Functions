@@ -3,8 +3,8 @@ NTMTC-Functions
 
 WordPress plugin for the Tech Center Website
 
-Plugin Name: NTM WP-Members Email to Username
-Description: Removes the need to create a username (if wp-members is in use). Changes or removes appropriate items from forms, and adds the email address as the username. If WP-Members is no longer in use, there are plenty of plugins that offer this capability for WP's native registration and login functions
+Plugin Name: NTM Tech Center Functions
+Description: Adds various simple functions specifically for this site. Includes the [ntmtc-thisyear] shortcode, and custom image sizes. Also includes function to facilitate "Search FAQ" option.
 Author: New Tribes Mission (Stephen Narwold)
-Plugin URI: https://github.com/newtribesmission/NTM-WPMem-Email-As-Username
+Author URI: http://blogs.ntm.org/stephen-narwold
 Version: 1.0
