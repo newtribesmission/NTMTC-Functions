@@ -1,10 +1,10 @@
 <?php
 /*
 Plugin Name: NTM Tech Center Functions
-Description: Adds various simple functions specifically for this site. Includes the [ntmtc-thisyear] shortcode, and custom image sizes. Also includes function to facilitate "Search FAQ" option.
+Description: Adds various simple functions specifically for this site. Includes: the [ntmtc-thisyear] shortcode, custom image sizes, function to facilitate "Search FAQ" option, auto-population feature on the "Registration Request" form
 Author: New Tribes Mission (Stephen Narwold)
 Author URI: http://blogs.ntm.org/stephen-narwold
-Version: 1.0
+Version: 1.1
 
     Copyright (C) 2014  New Tribes Mission
 
@@ -82,4 +82,35 @@ function filter_search_by_ancestor($query) {
     return $query;
 }
 add_filter('pre_get_posts','filter_search_by_ancestor');
+
+
+//Auto-populate the Registration Request form
+function ntmtc_prepare_javascript() {
+	if ( $_GET['ntmrr_error'] == 'not-approved' ) {
+		$GLOBALS['ntmtc-name'] = preg_replace('/[\\\']/', '', $_GET['first_name'] . ' ' . $_GET['last_name']);
+		$GLOBALS['ntmtc-email'] = preg_replace('/[\\\']/', '', $_GET['user_email']);
+		$GLOBALS['ntmtc-org'] = preg_replace('/[\\\']/', '', $_GET['organization']);
+		add_action( 'wp_head', 'ntmtc_autopopulate_registration_request_form' );
+	}
+}
+function ntmtc_autopopulate_registration_request_form($name = '', $email = '', $org = '') {
+	?>
+	<script type='text/javascript'>
+		function ntmtcAutoFillRegRequestForm() {
+			document.getElementById('ntmtc-name').value = decodeURIComponent('<?php echo $GLOBALS['ntmtc-name']; ?>');
+			document.getElementById('ntmtc-email').value = decodeURIComponent('<?php echo $GLOBALS['ntmtc-email']; ?>');
+			document.getElementById('ntmtc-org').value = decodeURIComponent('<?php echo $GLOBALS['ntmtc-org']; ?>');
+		}
+		window.onload=ntmtcAutoFillRegRequestForm;
+	</script>
+	<?php
+}
+add_action( 'init', 'ntmtc_prepare_javascript' );
+
+//Send Auto-populate data to the registration request page using NTM Restrict Registration Plugin
+function ntmtc_send_data_to_registration_request_page($in) {
+	$firstchar = ( false !== strpos( $in, '?' ) ) ? '&' : '?';
+	return $in . $firstchar . 'first_name=' . $_POST['first_name'] . '&last_name=' . $_POST['last_name'] . '&user_email=' . $_POST['user_email'] . '&organization=' . $_POST['organization'] . '';
+}
+add_filter( 'ntmrr_redirect_text', 'ntmtc_send_data_to_registration_request_page');
 ?>
